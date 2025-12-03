@@ -1,4 +1,6 @@
-﻿using DotNetEnv;
+﻿using System;
+using System.Diagnostics;
+using DotNetEnv;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.SlashCommands;
@@ -6,32 +8,46 @@ using Microsoft.Extensions.Logging;
 using Sprig.Modules;
 using Sprig.Utils.Logging;
 
-Env.Load();
-
-bool debugEnabled = Env.GetBool("DEBUG", false);
-
-var discord = new DiscordClient(new DiscordConfiguration()
+namespace Sprig
 {
-    Token = Env.GetString("DISCORD_TOKEN"),
-    TokenType = TokenType.Bot,
-    Intents = DiscordIntents.All,
-    MinimumLogLevel = debugEnabled ? LogLevel.Debug : LogLevel.Information,
-    LogTimestampFormat = "yyyy.MM.dd - HH:mm:ss"
-});
+    public static class BotState
+    {
+        public static readonly Stopwatch BotUptime = Stopwatch.StartNew();
+    }
 
-Logger.Init(discord);
+    public class Program
+    {
+        public static async Task Main(string[] args)
+        {
+            Env.Load();
 
-var commands = discord.UseCommandsNext(new CommandsNextConfiguration()
-{
-    StringPrefixes = new[] {"sprig."},
-    EnableDefaultHelp = false
-});
+            bool debugEnabled = Env.GetBool("DEBUG", false);
 
-var slash = discord.UseSlashCommands();
+            var discord = new DiscordClient(new DiscordConfiguration()
+            {
+                Token = Env.GetString("DISCORD_TOKEN"),
+                TokenType = TokenType.Bot,
+                Intents = DiscordIntents.All,
+                MinimumLogLevel = debugEnabled ? LogLevel.Debug : LogLevel.Information,
+                LogTimestampFormat = "yyyy.MM.dd - HH:mm:ss"
+            });
 
-CommandLoader.LoadText(commands);
-CommandLoader.LoadSlash(slash);
-EventLoader.Load(discord);
+            Logger.Init(discord);
 
-await discord.ConnectAsync();
-await Task.Delay(-1);
+            var commands = discord.UseCommandsNext(new CommandsNextConfiguration()
+            {
+                StringPrefixes = new[] { "sprig." },
+                EnableDefaultHelp = false
+            });
+
+            var slash = discord.UseSlashCommands();
+
+            CommandLoader.LoadText(commands);
+            CommandLoader.LoadSlash(slash);
+            EventLoader.Load(discord);
+
+            await discord.ConnectAsync();
+            await Task.Delay(-1);
+        }
+    }
+}

@@ -12,28 +12,26 @@ namespace Sprig.Commands.Dev
 {
     public class DevStatusCommand : BaseCommandModule
     {
-        private static readonly Stopwatch BotUptime = Stopwatch.StartNew();
-
         [Command("status")]
         [Description("Displays bot and system status information.")]
         public async Task StatusCommand(CommandContext ctx)
         {
-            var botUptime = BotUptime.Elapsed;
-var botUptimeStr = $"{botUptime.Days}d {botUptime.Hours}h {botUptime.Minutes}m {botUptime.Seconds}s";
+            var botUptime = BotState.BotUptime.Elapsed;
+            var botUptimeStr = $"{botUptime.Days}d {botUptime.Hours}h {botUptime.Minutes}m {botUptime.Seconds}s";
 
             string systemUptime = "Unknown";
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && File.Exists("/proc/uptime"))
             {
                 var uptimeSeconds = double.Parse(File.ReadAllText("/proc/uptime").Split(' ')[0]);
                 var ts = TimeSpan.FromSeconds(uptimeSeconds);
-                systemUptime = $"{ts.Days}d {ts.Hours}h {ts.Minutes}m";
+                systemUptime = $"{ts.Days}d {ts.Hours}h {ts.Minutes}m {ts.Seconds}s";
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 try
                 {
                     var uptime = TimeSpan.FromMilliseconds(Environment.TickCount64);
-                    systemUptime = $"{uptime.Days}d {uptime.Hours}h {uptime.Minutes}m";
+                    systemUptime = $"{uptime.Days}d {uptime.Hours}h {uptime.Minutes}m {uptime.Seconds}s";
                 }
                 catch { }
             }
