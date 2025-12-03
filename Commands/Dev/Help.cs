@@ -13,10 +13,12 @@ namespace Sprig.Commands.Dev
         [Description("Lists all dev-only commands.")]
         public async Task Help(CommandContext ctx)
         {
+            #pragma warning disable CS8602 // dereference of a possibly null reference
             var commands = ctx.CommandsNext.RegisteredCommands.Values
                 .Where(c => c.Module.ModuleType.Namespace?.Contains("Dev") ?? false)
                 .OrderBy(c => c.Name)
                 .ToList();
+            #pragma warning restore CS8602
 
             if (!commands.Any())
             {
