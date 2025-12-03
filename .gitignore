@@ -1,0 +1,23 @@
+# Build artifacts
+bin/
+obj/
+
+# User-Specific / IDE Files
+*.user
+*.suo
+*.vs/
+.vscode/
+.idea/
+
+# NuGet packages
+*.nupkg
+packages/
+
+# Environment/config secrets
+.env
+appsettings.json
+appsettings.*.json
+
+# OS-specific files
+.DS_Store
+Thumbs.db
