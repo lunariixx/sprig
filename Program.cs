@@ -16,7 +16,7 @@ var discord = new DiscordClient(new DiscordConfiguration()
     TokenType = TokenType.Bot,
     Intents = DiscordIntents.All,
     MinimumLogLevel = debugEnabled ? LogLevel.Debug : LogLevel.Information,
-    LogTimestampFormat = "yyyy.MM.dd  - HH:mm:ss"
+    LogTimestampFormat = "yyyy.MM.dd - HH:mm:ss"
 });
 
 Logger.Init(discord);
