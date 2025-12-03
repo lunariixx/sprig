@@ -23,7 +23,8 @@ Logger.Init(discord);
 
 var commands = discord.UseCommandsNext(new CommandsNextConfiguration()
 {
-    StringPrefixes = new[] {"sprig."}
+    StringPrefixes = new[] {"sprig."},
+    EnableDefaultHelp = false
 });
 
 var slash = discord.UseSlashCommands();
